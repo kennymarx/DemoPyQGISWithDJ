@@ -87,8 +87,10 @@ class UserPermissionView(APIView):
 
 class CheckAuthView(APIView):
     permission_classes = [AllowAny]
-
+    
     def post(self, request):
+        # 
+        print("CheckAuthView:",request.data)
         code = request.data.get('code')
         if not code:
             return Response({'code': 400, 'message': '缺少code参数'}, status=status.HTTP_400_BAD_REQUEST)
@@ -114,6 +116,7 @@ class CheckAuthView(APIView):
             return Response({'code': 400, 'message': '获取openid失败'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
+            print("openid:",openid)
             authorized_user = AuthorizedUser.objects.get(openid=openid)
             if not authorized_user.is_active:
                 return Response({
@@ -121,6 +124,12 @@ class CheckAuthView(APIView):
                     'message': '用户已禁用',
                     'data': {'is_authorized': False}
                 })
+            else:
+                print("authorized_user:",authorized_user)
+            from rest_framework_simplejwt.tokens import RefreshToken
+            refresh = RefreshToken.for_user(None)
+            access_token = str(refresh.access_token)
+            
             return Response({
                 'code': 0,
                 'message': '用户已授权',
@@ -128,7 +137,8 @@ class CheckAuthView(APIView):
                     'is_authorized': True,
                     'openid': openid,
                     'nickname': authorized_user.nickname,
-                    'avatar': authorized_user.avatar
+                    'avatar': authorized_user.avatar,
+                    'access_token': access_token
                 }
             })
         except AuthorizedUser.DoesNotExist:
