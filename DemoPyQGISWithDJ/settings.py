@@ -125,8 +125,9 @@ CORS_ALLOW_CREDENTIALS = True
 
 # REST Framework Config
 REST_FRAMEWORK = {
+    # 使用自定义 JWT 认证类，认证时从 AuthorizedUser 表查找用户
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'users.authentication.AuthorizedUserJWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -134,8 +135,8 @@ REST_FRAMEWORK = {
 }
 
 # WeChat App Config
-WECHAT_APP_ID = 'your_wechat_app_id'
-WECHAT_APP_SECRET = 'your_wechat_app_secret'
+WECHAT_APP_ID = 'XXX'
+WECHAT_APP_SECRET = 'XXX'
 
 # Internationalization
 LANGUAGE_CODE = 'zh-hans'

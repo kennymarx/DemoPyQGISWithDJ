@@ -3,11 +3,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
+
 class CreateMapByCoord(APIView):
+    # 需要用户认证才能访问此接口
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
         data = request.data
+        
         
         coordinate_type = data.get('coordinate_type')
         side_length = data.get('side_length')
